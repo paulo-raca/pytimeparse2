@@ -1,30 +1,18 @@
+ pytimeparse2: time expression parser
 =====================================
- pytimeparse: time expression parser
-=====================================
 
-.. image:: https://travis-ci.org/wroberts/pytimeparse.svg?branch=master
-    :target: https://travis-ci.org/wroberts/pytimeparse
-    :alt: Travis CI build status
+This is a `pytimeparse <https://github.com/wroberts/pytimeparse>`_ based project with the aim of optimizing functionality and providing stable support.
 
-.. image:: https://coveralls.io/repos/wroberts/pytimeparse/badge.svg
-    :target: https://coveralls.io/r/wroberts/pytimeparse
-    :alt: Test code coverage
+Copyright (c) 2021 Sergey Klyuykov <onegreyonewhite@mail.ru>
 
-.. image:: https://img.shields.io/pypi/v/pytimeparse.svg
-    :target: https://pypi.python.org/pypi/pytimeparse/
-    :alt: Latest Version
-
-Copyright (c) 2014 Will Roberts <wildwilhelm@gmail.com>
-
-Licensed under the MIT License (see source file ``timeparse.py`` for
+Licensed under the MIT License (see source file ``pytimeparse2.py`` for
 details).
 
 A small Python library to parse various kinds of time expressions,
 inspired by
 `this StackOverflow question <http://stackoverflow.com/questions/4628122/how-to-construct-a-timedelta-object-from-a-simple-string>`_.
 
-The single function ``pytimeparse.timeparse.timeparse`` defined in the
-library (also available as ``pytimeparse.parse``) parses time
+The single function ``pytimeparse2.parse`` defined in the library parses time
 expressions like the following:
 
 - ``32m``
@@ -82,8 +70,5 @@ A number of seconds can be converted back into a string using the
 Future work
 -----------
 
-1. Give the user more flexibility over which characters to use as
-   separators between fields in a time expression (e.g., ``+`` might
-   be useful).
-2. Internationalisation?
-3. Wow, https://github.com/bear/parsedatetime .
+1. Speed up with Cython for some python versions.
+2. Use github actions for testing and releasing.

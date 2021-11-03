@@ -5,4 +5,9 @@
 /MANIFEST
 /build/
 /dist/
-/pytimeparse.egg-info/
+*.egg-info/
+venv
+.tox
+.mypy_cache
+.idea
+.vscode
