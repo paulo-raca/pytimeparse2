@@ -1,5 +1,13 @@
- pytimeparse2: time expression parser
+pytimeparse2: time expression parser
 =====================================
+
+.. image:: https://github.com/onegreyonewhite/pytimeparse2/actions/workflows/check.yml/badge.svg?branch=master
+    :target: https://github.com/onegreyonewhite/pytimeparse2/actions
+    :alt: Pipeline status
+
+.. image:: https://badge.fury.io/py/pytimeparse2.svg
+    :target: https://badge.fury.io/py/pytimeparse2
+
 
 This is a `pytimeparse <https://github.com/wroberts/pytimeparse>`_ based project with the aim of optimizing functionality and providing stable support.
 
