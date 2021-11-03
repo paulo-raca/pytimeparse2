@@ -30,7 +30,7 @@ kinds of time expressions.
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__version__ = '1.3.0'
+__version__ = '1.3.1'
 
 import typing
 import re
@@ -102,7 +102,7 @@ def _interpret_as_minutes(sval, mdict):
     return mdict
 
 
-def parse(sval: str, granularity: str = 'seconds') -> typing.Optional[typing.Union[int, float]]:
+def _parse(sval: str, granularity: str = 'seconds') -> typing.Optional[typing.Union[int, float]]:
     """
     Parse a time expression, returning it as a number of seconds.  If
     possible, the return value will be an `int`; if this is not
@@ -180,7 +180,11 @@ def parse(sval: str, granularity: str = 'seconds') -> typing.Optional[typing.Uni
                 if v is not None
             ])
 
+    return int(float(sval)) * sign
+
+
+def parse(sval: str, granularity: str = 'seconds') -> typing.Optional[typing.Union[int, float]]:
     try:
-        return int(float(sval)) * sign
-    except ValueError:
+        return _parse(sval, granularity)
+    except Exception:
         return None
