@@ -371,6 +371,12 @@ class TestTimeparse(unittest.TestCase):
         self.assertEqual(timeparse.parse('3 msecs'), 0.003)
         self.assertEqual(timeparse.parse('3 milliseconds'), 0.003)
 
+    def test_plain_numbers(self):
+        self.assertEqual(timeparse.parse('10'), 10)
+        self.assertEqual(timeparse.parse('10.1'), 10)
+        self.assertEqual(timeparse.parse('-10'), -10)
+        self.assertEqual(timeparse.parse('-10.1'), -10)
+
     def test_doctest(self):
         """Run timeparse doctests."""
         self.assertTrue(doctest.testmod(timeparse, raise_on_error=True))

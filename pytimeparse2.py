@@ -36,8 +36,6 @@ import typing
 import re
 
 SIGN = r'(?P<sign>[+|-]|\+)?'
-# YEARS      = r'(?P<years>\d+)\s*(?:ys?|yrs?.?|years?)'
-# MONTHS     = r'(?P<months>\d+)\s*(?:mos?.?|mths?.?|months?)'
 WEEKS = r'(?P<weeks>[\d.]+)\s*(?:w|wks?|weeks?)'
 DAYS = r'(?P<days>[\d.]+)\s*(?:d|dys?|days?)'
 HOURS = r'(?P<hours>[\d.]+)\s*(?:h|hrs?|hours?)'
@@ -102,7 +100,10 @@ def _interpret_as_minutes(sval, mdict):
     return mdict
 
 
-def _parse(sval: str, granularity: str = 'seconds') -> typing.Optional[typing.Union[int, float]]:
+def _parse(
+        sval: typing.Union[str, int, float],
+        granularity: str = 'seconds'
+) -> typing.Optional[typing.Union[int, float]]:
     """
     Parse a time expression, returning it as a number of seconds.  If
     possible, the return value will be an `int`; if this is not
@@ -183,7 +184,10 @@ def _parse(sval: str, granularity: str = 'seconds') -> typing.Optional[typing.Un
     return int(float(sval)) * sign
 
 
-def parse(sval: str, granularity: str = 'seconds') -> typing.Optional[typing.Union[int, float]]:
+def parse(
+        sval: typing.Union[str, int, float],
+        granularity: str = 'seconds'
+) -> typing.Optional[typing.Union[int, float]]:
     try:
         return _parse(sval, granularity)
     except Exception:
