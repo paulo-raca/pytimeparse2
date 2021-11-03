@@ -365,6 +365,12 @@ class TestTimeparse(unittest.TestCase):
         self.assertEqual(timeparse.parse('+5.6 weeks'), 3386880)
         self.assertEqual(timeparse.parse('-5.6 weeks'), -3386880)
 
+    def test_milliseconds(self):
+        self.assertEqual(timeparse.parse('3 ms'), 0.003)
+        self.assertEqual(timeparse.parse('3 millis'), 0.003)
+        self.assertEqual(timeparse.parse('3 msecs'), 0.003)
+        self.assertEqual(timeparse.parse('3 milliseconds'), 0.003)
+
     def test_doctest(self):
         """Run timeparse doctests."""
         self.assertTrue(doctest.testmod(timeparse, raise_on_error=True))

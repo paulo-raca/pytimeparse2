@@ -404,7 +404,7 @@ if 'develop' in sys.argv:
 
 kwargs = dict(
     name='pytimeparse2',
-    packages=find_packages(exclude=['tests']+ext_list),
+    py_modules=['pytimeparse2'],
     ext_modules_list=ext_list,
     install_requires=[],
     project_urls={

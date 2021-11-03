@@ -30,7 +30,7 @@ kinds of time expressions.
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__version__ = '1.2.0'
+__version__ = '1.3.0'
 
 import typing
 import re
@@ -43,6 +43,7 @@ DAYS = r'(?P<days>[\d.]+)\s*(?:d|dys?|days?)'
 HOURS = r'(?P<hours>[\d.]+)\s*(?:h|hrs?|hours?)'
 MINS = r'(?P<mins>[\d.]+)\s*(?:m|(mins?)|(minutes?))'
 SECS = r'(?P<secs>[\d.]+)\s*(?:s|secs?|seconds?)'
+MILLIS = r'(?P<millis>[\d.]+)\s*(?:ms|msecs?|millis|milliseconds?)'
 SEPARATORS = r'[,/]'
 SECCLOCK = r':(?P<secs>\d{2}(?:\.\d+)?)'
 MINCLOCK = r'(?P<mins>\d{1,2}):(?P<secs>\d{2}(?:\.\d+)?)'
@@ -56,6 +57,7 @@ MULTIPLIERS = {
     'hours': 60 * 60,
     'mins': 60,
     'secs': 1,
+    'millis': 1e-3,
 }
 
 
@@ -68,7 +70,7 @@ def OPTSEP(x):
 
 
 TIMEFORMATS = [
-    rf'{OPTSEP(WEEKS)}\s*{OPTSEP(DAYS)}\s*{OPTSEP(HOURS)}\s*{OPTSEP(MINS)}\s*{OPT(SECS)}',
+    rf'{OPTSEP(WEEKS)}\s*{OPTSEP(DAYS)}\s*{OPTSEP(HOURS)}\s*{OPTSEP(MINS)}\s*{OPT(SECS)}\s*{OPT(MILLIS)}',
     rf'{MINCLOCK}',
     rf'{OPTSEP(WEEKS)}\s*{OPTSEP(DAYS)}\s*{HOURCLOCK}',
     rf'{DAYCLOCK}',
@@ -155,10 +157,10 @@ def parse(sval: str, granularity: str = 'seconds') -> typing.Optional[typing.Uni
         if granularity == 'minutes':
             mdict = _interpret_as_minutes(sval, mdict)
 
-        # if all of the fields are integer numbers
-        if all(v.isdigit() for v in list(mdict.values()) if v):
+        # if all of the fields are numbers
+        if all(v.isdigit() for v in mdict.values() if v):
             return sign * sum([
-                MULTIPLIERS[k] * int(v, 10)
+                MULTIPLIERS[k] * int(v, 10)  # type: ignore
                 for k, v in mdict.items()
                 if v is not None
             ])
