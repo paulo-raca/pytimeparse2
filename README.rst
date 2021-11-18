@@ -64,6 +64,19 @@ possible, otherwise a floating-point number)::
     >>> parse('1.2 minutes')
     72
 
+For months and years, the library does not consider complications such as leap-
+years and leap-seconds. Instead, it assumes "30 days for a month" and "365 days
+for a year" as the basis for calculations with those units.
+
+- ``2 mo``
+- ``2 months``
+- ``3y``
+- ``3 years``
+- ``1y2mo3w4d5h6m7s8ms``
+
+Notes
+-----
+
 A number of seconds can be converted back into a string using the
 ``datetime`` module in the standard library, as noted in
 `this other StackOverflow question <http://stackoverflow.com/questions/538666/python-format-timedelta-to-string>`_::

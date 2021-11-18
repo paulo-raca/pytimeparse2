@@ -25,6 +25,8 @@ class TestTimeparse(unittest.TestCase):
 
     def test_mins(self):
         """Test parsing minutes."""
+        self.assertEqual(re.match(timeparse.MINS, '32m').groupdict(),
+                         {'mins': '32'})
         self.assertEqual(re.match(timeparse.MINS, '32min').groupdict(),
                          {'mins': '32'})
         self.assertEqual(re.match(timeparse.MINS, '32mins').groupdict(),
@@ -54,6 +56,50 @@ class TestTimeparse(unittest.TestCase):
                          {'hours': '32'})
         self.assertEqual(re.match(timeparse.HOURS, '32 h').groupdict(),
                          {'hours': '32'})
+
+    def test_months(self):
+        """Test parsing months."""
+        self.assertEqual(re.match(timeparse.MONTHS, '32mo').groupdict(),
+                         {'months': '32'})
+        self.assertEqual(re.match(timeparse.MONTHS, '32mon').groupdict(),
+                         {'months': '32'})
+        self.assertEqual(re.match(timeparse.MONTHS, '32month').groupdict(),
+                         {'months': '32'})
+        self.assertEqual(re.match(timeparse.MONTHS, '32months').groupdict(),
+                         {'months': '32'})
+        self.assertEqual(re.match(timeparse.MONTHS, '32 mo').groupdict(),
+                         {'months': '32'})
+        self.assertEqual(re.match(timeparse.MONTHS, '32 months').groupdict(),
+                         {'months': '32'})
+        self.assertEqual(re.match(timeparse.MONTHS, '32mos').groupdict(),
+                         {'months': '32'})
+        self.assertEqual(re.match(timeparse.MONTHS, '32mths').groupdict(),
+                         {'months': '32'})
+        self.assertEqual(re.match(timeparse.MONTHS, '2.3mo').groupdict(),
+                         {'months': '2.3'})
+        self.assertEqual(re.match(timeparse.MONTHS, '2.5mo').groupdict(),
+                         {'months': '2.5'})
+
+    def test_years(self):
+        """Test parsing years."""
+        self.assertEqual(re.match(timeparse.YEARS, '32y').groupdict(),
+                         {'years': '32'})
+        self.assertEqual(re.match(timeparse.YEARS, '32ys').groupdict(),
+                         {'years': '32'})
+        self.assertEqual(re.match(timeparse.YEARS, '32yrs').groupdict(),
+                         {'years': '32'})
+        self.assertEqual(re.match(timeparse.YEARS, '32year').groupdict(),
+                         {'years': '32'})
+        self.assertEqual(re.match(timeparse.YEARS, '32years').groupdict(),
+                         {'years': '32'})
+        self.assertEqual(re.match(timeparse.YEARS, '32 y').groupdict(),
+                         {'years': '32'})
+        self.assertEqual(re.match(timeparse.YEARS, '32 years').groupdict(),
+                         {'years': '32'})
+        self.assertEqual(re.match(timeparse.YEARS, '2.3y').groupdict(),
+                         {'years': '2.3'})
+        self.assertEqual(re.match(timeparse.YEARS, '2.5y').groupdict(),
+                         {'years': '2.5'})
 
     def test_time(self):
         """Test parsing time expression."""
@@ -376,6 +422,9 @@ class TestTimeparse(unittest.TestCase):
         self.assertEqual(timeparse.parse('10.1'), 10)
         self.assertEqual(timeparse.parse('-10'), -10)
         self.assertEqual(timeparse.parse('-10.1'), -10)
+
+    def test_combined(self):
+        self.assertEqual(timeparse.parse('1y2mo3w4d5h6m7s8ms'), 38898367.008)
 
     def test_doctest(self):
         """Run timeparse doctests."""
