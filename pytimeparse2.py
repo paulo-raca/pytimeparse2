@@ -72,7 +72,14 @@ def OPTSEP(x):
 
 
 TIMEFORMATS = [
-    rf'{OPTSEP(YEARS)}\s*{OPTSEP(MONTHS)}\s*{OPTSEP(WEEKS)}\s*{OPTSEP(DAYS)}\s*{OPTSEP(HOURS)}\s*{OPTSEP(MINS)}\s*{OPT(SECS)}\s*{OPT(MILLIS)}',
+    (rf'{OPTSEP(YEARS)}\s*'
+     rf'{OPTSEP(MONTHS)}\s*'
+     rf'{OPTSEP(WEEKS)}\s*'
+     rf'{OPTSEP(DAYS)}\s*'
+     rf'{OPTSEP(HOURS)}\s*'
+     rf'{OPTSEP(MINS)}\s*'
+     rf'{OPT(SECS)}\s*'
+     rf'{OPT(MILLIS)}'),
     rf'{OPTSEP(WEEKS)}\s*{OPTSEP(DAYS)}\s*{OPTSEP(HOURS)}\s*{OPTSEP(MINS)}\s*{OPT(SECS)}\s*{OPT(MILLIS)}',
     rf'{MINCLOCK}',
     rf'{OPTSEP(WEEKS)}\s*{OPTSEP(DAYS)}\s*{HOURCLOCK}',
