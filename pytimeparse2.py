@@ -36,6 +36,8 @@ import typing
 import re
 
 SIGN = r'(?P<sign>[+|-]|\+)?'
+YEARS = r'(?P<years>[\d.]+)\s*(?:ys?|yrs?.?|years?)'
+MONTHS = r'(?P<months>[\d.]+)\s*(?:mos?.?|mths?.?|months?)'
 WEEKS = r'(?P<weeks>[\d.]+)\s*(?:w|wks?|weeks?)'
 DAYS = r'(?P<days>[\d.]+)\s*(?:d|dys?|days?)'
 HOURS = r'(?P<hours>[\d.]+)\s*(?:h|hrs?|hours?)'
@@ -50,6 +52,8 @@ DAYCLOCK = (r'(?P<days>\d+):(?P<hours>\d{2}):'
             r'(?P<mins>\d{2}):(?P<secs>\d{2}(?:\.\d+)?)')
 
 MULTIPLIERS = {
+    'years': 60 * 60 * 24 * 365,
+    'months': 60 * 60 * 24 * 30,
     'weeks': 60 * 60 * 24 * 7,
     'days': 60 * 60 * 24,
     'hours': 60 * 60,
@@ -68,11 +72,14 @@ def OPTSEP(x):
 
 
 TIMEFORMATS = [
+    rf'{OPTSEP(YEARS)}\s*{OPTSEP(MONTHS)}\s*{OPTSEP(WEEKS)}\s*{OPTSEP(DAYS)}\s*{OPTSEP(HOURS)}\s*{OPTSEP(MINS)}\s*{OPT(SECS)}\s*{OPT(MILLIS)}',
     rf'{OPTSEP(WEEKS)}\s*{OPTSEP(DAYS)}\s*{OPTSEP(HOURS)}\s*{OPTSEP(MINS)}\s*{OPT(SECS)}\s*{OPT(MILLIS)}',
     rf'{MINCLOCK}',
     rf'{OPTSEP(WEEKS)}\s*{OPTSEP(DAYS)}\s*{HOURCLOCK}',
     rf'{DAYCLOCK}',
     rf'{SECCLOCK}',
+    rf'{YEARS}',
+    rf'{MONTHS}',
 ]
 
 COMPILED_SIGN = re.compile(r'\s*' + SIGN + r'\s*(?P<unsigned>.*)$')
@@ -93,7 +100,9 @@ def _interpret_as_minutes(sval, mdict):
     {'hours': '1', 'mins': '24'}
     """
     if sval.count(':') == 1 and '.' not in sval and (('hours' not in mdict) or (mdict['hours'] is None)) and (
-            ('days' not in mdict) or (mdict['days'] is None)) and (('weeks' not in mdict) or (mdict['weeks'] is None)):
+            ('days' not in mdict) or (mdict['days'] is None)) and (('weeks' not in mdict) or (mdict['weeks'] is None)) \
+            and (('months' not in mdict) or (mdict['months'] is None)) \
+            and (('years' not in mdict) or (mdict['years'] is None)):
         mdict['hours'] = mdict['mins']
         mdict['mins'] = mdict['secs']
         mdict.pop('secs')
