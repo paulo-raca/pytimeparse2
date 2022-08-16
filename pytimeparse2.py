@@ -4,7 +4,7 @@
 """
 (c) Sergey Klyuykov <onegreyonewhite@mail.ru> 3 Nov 2021
 
-Implements a single function, `timeparse`, which can parse various
+Implements a single function, `parse`, which can parse various
 kinds of time expressions.
 """
 
@@ -30,7 +30,7 @@ kinds of time expressions.
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__version__ = '1.4.0'
+__version__ = '1.5.0'
 
 import typing
 import re
@@ -120,43 +120,6 @@ def _parse(
         sval: typing.Union[str, int, float],
         granularity: str = 'seconds'
 ) -> typing.Optional[typing.Union[int, float]]:
-    """
-    Parse a time expression, returning it as a number of seconds.  If
-    possible, the return value will be an `int`; if this is not
-    possible, the return will be a `float`.  Returns `None` if a time
-    expression cannot be parsed from the given string.
-
-    Arguments:
-    - `sval`: the string value to parse
-
-    >>> parse('1:24')
-    84
-    >>> parse(':22')
-    22
-    >>> parse('1 minute, 24 secs')
-    84
-    >>> parse('1m24s')
-    84
-    >>> parse('1.2 minutes')
-    72
-    >>> parse('1.2 seconds')
-    1.2
-
-    Time expressions can be signed.
-
-    >>> parse('- 1 minute')
-    -60
-    >>> parse('+ 1 minute')
-    60
-
-    If granularity is specified as ``minutes``, then ambiguous digits following
-    a colon will be interpreted as minutes; otherwise they are considered seconds.
-
-    >>> parse('1:30')
-    90
-    >>> parse('1:30', granularity='minutes')
-    5400
-    """
     if isinstance(sval, (int, float)):
         return int(sval)
 
@@ -202,9 +165,59 @@ def _parse(
 
 def parse(
         sval: typing.Union[str, int, float],
-        granularity: str = 'seconds'
-) -> typing.Optional[typing.Union[int, float]]:
+        granularity: str = 'seconds',
+        raise_exception: bool = False,
+) -> typing.Optional[typing.Union[int, float, typing.NoReturn]]:
+    """
+    Parse a time expression, returning it as a number of seconds.  If
+    possible, the return value will be an `int`; if this is not
+    possible, the return will be a `float`.  Returns `None` if a time
+    expression cannot be parsed from the given string.
+
+    Arguments:
+    - `sval`: the string value to parse
+    - `granularity`: minimal type of digits after last colon (default is ``seconds``)
+    - `raise_exception`: raise exception on parsing errors (default is ``False``)
+
+    >>> parse('1:24')
+    84
+    >>> parse(':22')
+    22
+    >>> parse('1 minute, 24 secs')
+    84
+    >>> parse('1m24s')
+    84
+    >>> parse('1.2 minutes')
+    72
+    >>> parse('1.2 seconds')
+    1.2
+
+    Time expressions can be signed.
+
+    >>> parse('- 1 minute')
+    -60
+    >>> parse('+ 1 minute')
+    60
+
+    If granularity is specified as ``minutes``, then ambiguous digits following
+    a colon will be interpreted as minutes; otherwise they are considered seconds.
+
+    >>> parse('1:30')
+    90
+    >>> parse('1:30', granularity='minutes')
+    5400
+
+    If ``raise_exception`` is specified as ``True``, then exception will raised
+    on failed parsing.
+
+    >>> parse('smthng strange', raise_exception=True)
+    Traceback (most recent call last):
+        ...
+    ValueError: could not convert string to float: 'smthng strange'
+    """
     try:
         return _parse(sval, granularity)
     except Exception:
+        if raise_exception:
+            raise
         return None
