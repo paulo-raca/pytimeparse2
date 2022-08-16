@@ -408,9 +408,9 @@ kwargs = dict(
     ext_modules_list=ext_list,
     install_requires=[],
     project_urls={
-        "Issue Tracker": "https://gitlab.com/onegreyonewhite/configparserc/-/issues",
-        "Source Code": "https://gitlab.com/onegreyonewhite/configparserc.git",
-        "Releases": "https://pypi.org/project/configparserc/#history",
+        "Issue Tracker": "https://github.com/onegreyonewhite/pytimeparse2/-/issues",
+        "Source Code": "https://github.com/onegreyonewhite/pytimeparse2.git",
+        "Releases": "https://pypi.org/project/pytimeparse2/#history",
     },
 )
 
