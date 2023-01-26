@@ -426,6 +426,9 @@ class TestTimeparse(unittest.TestCase):
     def test_combined(self):
         self.assertEqual(timeparse.parse('1y2mo3w4d5h6m7s8ms'), 38898367.008)
 
+    def test_strange(self):
+        self.assertIsNone(timeparse.parse('1.1.1:22'))
+
     def test_doctest(self):
         """Run timeparse doctests."""
         self.assertTrue(doctest.testmod(timeparse, raise_on_error=True))

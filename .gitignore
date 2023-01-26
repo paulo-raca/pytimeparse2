@@ -1,5 +1,6 @@
 *.pyc
 *~
+*.c
 .DS_Store
 /.coverage
 /MANIFEST

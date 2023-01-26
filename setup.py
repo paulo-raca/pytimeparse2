@@ -13,16 +13,16 @@ distutils setup script for pytimeparse2.
 import re
 import os
 import sys
+import subprocess
 import fnmatch
 import codecs
 import gzip
-import glob
 import shutil
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
-from setuptools import find_packages, setup, Command
+from setuptools import find_packages, setup, errors, Command
 from setuptools.extension import Extension
 from setuptools.command.sdist import sdist as _sdist
 from setuptools.command.build_py import build_py as build_py_orig
@@ -130,6 +130,7 @@ def make_extensions(extensions_list, packages):
     extra_compile_args = [
         '-g0', '-ggdb1',
         "-fno-strict-aliasing",
+        "-ffast-math",
         "-fno-var-tracking-assignments",
         "-pipe", "-std=c99", '-Werror=sign-compare',
     ]
@@ -383,20 +384,18 @@ def make_setup(**opts):
 
     webpack_path = os.path.join(os.getcwd(), 'webpack.config.js')
     if os.path.exists(webpack_path) and is_build and os.environ.get('DONT_YARN', "") != 'true':
-        yarn_build_command = 'devBuild' if is_develop else 'build'
         try:
-            os.system('yarn install --pure-lockfile')
-            os.system('yarn ' + yarn_build_command)
-        except Extension as err:
-            print(err)
+            subprocess.check_call(['yarn', 'install', '--pure-lockfile', '--mutex network'], stdout=sys.stdout, stderr=sys.stderr)
+            subprocess.check_call(['yarn', 'devBuild' if is_develop else 'build'], stdout=sys.stdout, stderr=sys.stderr)
+        except Exception as err:
+            raise errors.CompileError(str(err))
 
     setup(**opts)
 
 ########################################################################################
 # end block
 
-ext_list = [
-]
+ext_list = []
 
 if 'develop' in sys.argv:
     ext_list = []

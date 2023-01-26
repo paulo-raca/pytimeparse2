@@ -30,10 +30,11 @@ kinds of time expressions.
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__version__ = '1.5.0'
+__version__ = '1.6.0'
 
 import typing
 import re
+
 
 SIGN = r'(?P<sign>[+|-]|\+)?'
 YEARS = r'(?P<years>[\d.]+)\s*(?:ys?|yrs?.?|years?)'
@@ -96,6 +97,27 @@ COMPILED_TIMEFORMATS = [
 ]
 
 
+def _all_digits(mdict):
+    digits_sum = 0
+    should_int = True
+
+    for time_type, value in mdict.items():
+        if not value:
+            continue
+        if value.isdigit():
+            digits_sum += MULTIPLIERS[time_type] * int(value, 10)
+            if time_type == 'millis':
+                should_int = False
+        elif value.replace('.', '', 1).isdigit():
+            digits_sum += MULTIPLIERS[time_type] * float(value)
+            if time_type == 'secs':
+                should_int = False
+
+    if should_int:
+        return int(digits_sum)
+    return digits_sum
+
+
 def _interpret_as_minutes(sval, mdict):
     """
     Times like "1:22" are ambiguous; do they represent minutes and seconds
@@ -137,28 +159,7 @@ def _parse(
         if granularity == 'minutes':
             mdict = _interpret_as_minutes(sval, mdict)
 
-        # if all of the fields are numbers
-        if all(v.isdigit() for v in mdict.values() if v):
-            return sign * sum([
-                MULTIPLIERS[k] * int(v, 10)  # type: ignore
-                for k, v in mdict.items()
-                if v is not None
-            ])
-        # if SECS is an integer number
-        elif 'secs' not in mdict or mdict['secs'] is None or mdict['secs'].isdigit():
-            # we will return an integer
-            return (int(mdict['secs'], 10) if mdict['secs'] else 0) + sign * int(sum([
-                MULTIPLIERS[k] * float(v)
-                for k, v in mdict.items()
-                if k != 'secs' and v is not None
-            ]))
-        else:
-            # SECS is a float, we will return a float
-            return sign * sum([
-                MULTIPLIERS[k] * float(v)  # type: ignore
-                for k, v in mdict.items()
-                if v is not None
-            ])
+        return sign * _all_digits(mdict)
 
     return int(float(sval)) * sign
 
@@ -210,10 +211,10 @@ def parse(
     If ``raise_exception`` is specified as ``True``, then exception will raised
     on failed parsing.
 
-    >>> parse('smthng strange', raise_exception=True)
+    >>> parse(':1.1.1', raise_exception=True)
     Traceback (most recent call last):
         ...
-    ValueError: could not convert string to float: 'smthng strange'
+    ValueError: could not convert string to float: ':1.1.1'
     """
     try:
         return _parse(sval, granularity)
