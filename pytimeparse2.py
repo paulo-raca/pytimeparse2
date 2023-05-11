@@ -30,7 +30,7 @@ kinds of time expressions.
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__version__ = '1.7.0'
+__version__ = '1.7.1'
 
 import typing
 import re
@@ -149,7 +149,7 @@ def _interpret_as_minutes(sval, mdict):
 
 
 def _normilized_relativedelta(value: typing.Optional[timedelta]) -> typing.Optional[timedelta]:
-    if isinstance(value, relativedelta):
+    if relativedelta is not None and isinstance(value, relativedelta):
         return value.normalized()
     return value
 
