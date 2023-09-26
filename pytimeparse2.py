@@ -52,7 +52,9 @@ DAYS = r'(?P<days>[\d.]+)\s*(?:d|dys?|days?)'
 HOURS = r'(?P<hours>[\d.]+)\s*(?:h|hrs?|hours?)'
 MINS = r'(?P<minutes>[\d.]+)\s*(?:m|(mins?)|(minutes?))'
 SECS = r'(?P<seconds>[\d.]+)\s*(?:s|secs?|seconds?)'
-MILLIS = r'(?P<milliseconds>[\d.]+)\s*(?:ms|msecs?|millis|milliseconds?)'
+MILLIS = r'(?P<milliseconds>[\d.]+)\s*(?:ms|msecs?|millis?|milliseconds?)'
+MICROS = r'(?P<microseconds>[\d.]+)\s*(?:µs|us|µsecs?|usecs?|micros?|microseconds?)'
+NANOS = r'(?P<nanoseconds>[\d.]+)\s*(?:ns|nsecs?|nanos?|nanoseconds?)'
 SEPARATORS = r'[,/]'
 SECCLOCK = r':(?P<seconds>\d{2}(?:\.\d+)?)'
 MINCLOCK = r'(?P<minutes>\d{1,2}):(?P<seconds>\d{2}(?:\.\d+)?)'
@@ -69,6 +71,8 @@ MULTIPLIERS = {
     'minutes': 60,
     'seconds': 1,
     'milliseconds': 1e-3,
+    'microseconds': 1e-6,
+    'nanoseconds': 1e-,
 }
 
 
@@ -88,8 +92,10 @@ TIMEFORMATS = [
      rf'{OPTSEP(HOURS)}\s*'
      rf'{OPTSEP(MINS)}\s*'
      rf'{OPT(SECS)}\s*'
-     rf'{OPT(MILLIS)}'),
-    rf'{OPTSEP(WEEKS)}\s*{OPTSEP(DAYS)}\s*{OPTSEP(HOURS)}\s*{OPTSEP(MINS)}\s*{OPT(SECS)}\s*{OPT(MILLIS)}',
+     rf'{OPT(MILLIS)}\s*'
+     rf'{OPT(MICROS)}\s*'
+     rf'{OPT(NANOS)}'),
+    rf'{OPTSEP(WEEKS)}\s*{OPTSEP(DAYS)}\s*{OPTSEP(HOURS)}\s*{OPTSEP(MINS)}\s*{OPT(SECS)}\s*{OPT(MILLIS)}\s*{OPT(MICROS)}\s*{OPT(NANOS)}',
     rf'{MINCLOCK}',
     rf'{OPTSEP(WEEKS)}\s*{OPTSEP(DAYS)}\s*{HOURCLOCK}',
     rf'{DAYCLOCK}',
